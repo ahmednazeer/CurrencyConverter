@@ -106,11 +106,52 @@ builder.Services.AddOpenTelemetry()
             });
     });
 
+//support multple environments
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
+// Log the environment being used
+builder.Logging.AddConsole();
+var logger = LoggerFactory.Create(config => config.AddConsole()).CreateLogger<Program>();
+logger.LogInformation("Application starting in {Environment} environment", builder.Environment.EnvironmentName);
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAll", policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+    });
+}
+else
+{
+    builder.Services.AddHsts(options =>
+    {
+        options.Preload = true;
+        options.IncludeSubDomains = true;
+        options.MaxAge = TimeSpan.FromDays(60);
+    });
+}
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
+app.MapControllers();
+
+// Health check endpoint
+app.MapGet("/health", () => Results.Ok(new { Status = "Healthy", Environment = app.Environment.EnvironmentName }));
+
 app.UseSerilogRequestLogging(options =>
 {
     options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
@@ -123,7 +164,3 @@ app.UseSerilogRequestLogging(options =>
 
 app.Run();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
