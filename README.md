@@ -20,4 +20,4 @@ Future Enhancements:
    - add authethetication logic
    - add factory method
    - provide docker file
-   - add more unit tests
+   - fix failed unit tests
