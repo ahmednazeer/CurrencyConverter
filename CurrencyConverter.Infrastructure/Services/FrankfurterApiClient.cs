@@ -1,5 +1,7 @@
 ﻿using CurrencyConverter.Core.Contracts;
 using CurrencyConverter.Core.Models;
+using CurrencyConverter.Infrastructure.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,11 @@ namespace CurrencyConverter.Infrastructure.Services
             _httpClient = httpClient;
             _logger = logger;
             _httpClient.BaseAddress = new Uri("https://api.frankfurter.app/");
+        }
+
+        public Task<IEnumerable<ExchangeRate>> GetHistoricalRatesAsync(string baseCurrency, DateTime startDate, DateTime endDate, int page = 1, int pageSize = 10)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<ExchangeRate> GetLatestRateAsync(
