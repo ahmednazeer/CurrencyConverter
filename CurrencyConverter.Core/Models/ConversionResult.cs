@@ -9,10 +9,11 @@ namespace CurrencyConverter.Core.Models
     public class ConversionResult
     {
         public decimal Amount { get; set; }
-        public decimal ConvertedAmount { get; set; }
+        public decimal ConvertedAmount { set; get; }
         public string FromCurrency { get; set; }
         public string ToCurrency { get; set; }
         public decimal Rate { get; set; }
         public DateTime RateDate { get; set; }
+
     }
 }
