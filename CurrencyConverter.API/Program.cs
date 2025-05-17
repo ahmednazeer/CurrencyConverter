@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Polly;
 using Serilog;
 using System.Text;
@@ -73,6 +75,36 @@ builder.Host.UseSerilog((context, config) =>
         .WriteTo.Console()
         .WriteTo.File("logs/currency-converter-.log", rollingInterval: RollingInterval.Day);
 });
+
+// Add to your existing Program.cs
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracerProviderBuilder =>
+    {
+        tracerProviderBuilder
+            .AddSource("CurrencyConverter") // Your application's source name
+            .SetResourceBuilder(
+                ResourceBuilder.CreateDefault()
+                    .AddService(
+                        serviceName: "CurrencyConverter",
+                        serviceVersion: "1.0.0",
+                        serviceInstanceId: Environment.MachineName))
+            .AddAspNetCoreInstrumentation(options =>
+            {
+                options.RecordException = true;
+                options.EnrichWithHttpRequest = (activity, httpRequest) =>
+                {
+                    activity.SetTag("client.ip", httpRequest.HttpContext.Connection.RemoteIpAddress);
+                    activity.SetTag("client.user_agent", httpRequest.Headers["User-Agent"]);
+                };
+            })
+            .AddHttpClientInstrumentation()
+            .AddConsoleExporter() // For local development
+            .AddOtlpExporter(opts =>
+            {
+                // For production - point to your collector
+                opts.Endpoint = new Uri(builder.Configuration["Otlp:Endpoint"] ?? "http://localhost:4317");
+            });
+    });
 
 var app = builder.Build();
 
