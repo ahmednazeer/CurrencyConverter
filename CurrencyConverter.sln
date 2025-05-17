@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyConverter.Core.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyConverter.API.Tests", "CurrencyConverter.API.Tests\CurrencyConverter.API.Tests.csproj", "{5318A266-046E-4DB4-81E9-6F6941CA2B85}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyConverter.Infrastructure.Tests", "CurrencyConverter.Infrastructure.Tests\CurrencyConverter.Infrastructure.Tests.csproj", "{7FB4A68C-EE22-44F5-9897-EF76102FA432}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{5318A266-046E-4DB4-81E9-6F6941CA2B85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5318A266-046E-4DB4-81E9-6F6941CA2B85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5318A266-046E-4DB4-81E9-6F6941CA2B85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FB4A68C-EE22-44F5-9897-EF76102FA432}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FB4A68C-EE22-44F5-9897-EF76102FA432}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FB4A68C-EE22-44F5-9897-EF76102FA432}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FB4A68C-EE22-44F5-9897-EF76102FA432}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
